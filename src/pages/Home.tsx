@@ -1,12 +1,16 @@
+import { useTranslation } from 'react-i18next';
+
 export const Home = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-slate-100 dark:from-emerald-950 dark:to-slate-900">
       <div className="text-center space-y-6 p-8">
         <h1 className="text-4xl font-bold text-foreground">
-          欢迎使用前端模板
+          {t('welcome_to_template')}
         </h1>
         <p className="text-xl text-muted-foreground">
-          开始构建你的应用吧！
+          {t('start_building')}
         </p>
         <div className="flex gap-4 justify-center">
           <a
@@ -15,7 +19,7 @@ export const Home = () => {
             rel="noopener noreferrer"
             className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
           >
-            React 文档
+            {t('react_docs')}
           </a>
           <a
             href="https://ui.shadcn.com"
@@ -23,7 +27,7 @@ export const Home = () => {
             rel="noopener noreferrer"
             className="px-6 py-3 bg-secondary text-secondary-foreground rounded-lg hover:opacity-90 transition-opacity"
           >
-            shadcn/ui 文档
+            {t('shadcn_docs')}
           </a>
         </div>
       </div>
