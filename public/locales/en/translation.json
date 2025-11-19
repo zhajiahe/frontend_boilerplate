@@ -4,5 +4,9 @@
   "welcome_to_template": "Welcome to the Frontend Template",
   "start_building": "Start building your application!",
   "react_docs": "React Docs",
-  "shadcn_docs": "shadcn/ui Docs"
+  "shadcn_docs": "shadcn/ui Docs",
+  "github_repo": "GitHub Repository",
+  "language": "Language",
+  "english": "English",
+  "chinese": "中文"
 }

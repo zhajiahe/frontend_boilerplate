@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Home } from '@/pages/Home';
-import { Toaster } from '@/components/ui/toaster';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { Toaster } from '@/components/ui/toaster';
+import { Home } from '@/pages/Home';
 
 function App() {
   return (
