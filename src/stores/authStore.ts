@@ -1,17 +1,29 @@
 import { create } from 'zustand';
-import type { UserResponse } from '@/api/aPIDoc';
 import { storage } from '@/utils/storage';
 
+/**
+ * 用户信息类型
+ * 根据实际后端返回格式调整
+ */
+export interface User {
+  id: string;
+  username: string;
+  nickname?: string;
+  email?: string;
+  avatar?: string;
+  [key: string]: any;
+}
+
 interface AuthState {
-  user: UserResponse | null;
+  user: User | null;
   token: string | null;
   isAuthenticated: boolean;
 
   // Actions
-  setAuth: (user: UserResponse, token: string, refreshToken: string) => void;
+  setAuth: (user: User, token: string, refreshToken: string) => void;
   clearAuth: () => void;
   logout: () => void;
-  updateUser: (user: UserResponse) => void;
+  updateUser: (user: User) => void;
   initAuth: () => void;
 }
 
@@ -36,7 +48,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     storage.clearAuth();
     set({ user: null, token: null, isAuthenticated: false });
     // 跳转到登录页
-    window.location.href = '/web/login';
+    window.location.href = '/login';
   },
 
   updateUser: (user) => {

@@ -1,31 +1,50 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
-// 清除认证信息的函数
+/**
+ * 获取登录页路径
+ * 使用环境变量配置的 base path
+ */
+const getLoginPath = () => {
+  const basePath = import.meta.env.VITE_BASE_PATH || '';
+  return `${basePath}/login`.replace(/\/+/g, '/');
+};
+
+/**
+ * 清除认证信息并重定向到登录页
+ */
 const clearAuthAndRedirect = () => {
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
   localStorage.removeItem('user');
 
-  // 使用 window.location.href 确保完全重定向
   const currentPath = window.location.pathname;
+  const loginPath = getLoginPath();
   if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
-    window.location.href = '/web/login';
+    window.location.href = loginPath;
   }
 };
 
-// 创建 axios 实例
+/**
+ * Axios 请求实例
+ *
+ * 配置说明：
+ * - baseURL: 通过环境变量 VITE_API_BASE_URL 配置，默认为 '/api/v1'
+ * - timeout: 请求超时时间，默认 30 秒
+ */
 const request = axios.create({
-  baseURL: '/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api/v1',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// 请求拦截器
+/**
+ * 请求拦截器
+ * 自动添加 Authorization header
+ */
 request.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // 从 localStorage 获取 token
     const token = localStorage.getItem('access_token');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -37,12 +56,14 @@ request.interceptors.request.use(
   }
 );
 
-// 响应拦截器
+/**
+ * 响应拦截器
+ * 处理业务错误和认证失败
+ */
 request.interceptors.response.use(
   (response) => {
-    // 检查 BaseResponse 格式的错误
-    if (response.data && !response.data.success) {
-      // 即使 HTTP 状态码是 200，但业务逻辑失败
+    // 检查 BaseResponse 格式的错误（如果后端使用统一响应格式）
+    if (response.data && response.data.success === false) {
       const error: any = new Error(response.data.msg || '请求失败');
       error.response = {
         data: response.data,
@@ -55,9 +76,8 @@ request.interceptors.response.use(
   async (error: AxiosError<any>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // 如果是 401 或 403 错误（认证失败或权限不足）
+    // 处理 401/403 认证错误
     if (error.response?.status === 401 || error.response?.status === 403) {
-      // 检查是否是 token 过期或无效
       const errorMsg = error.response?.data?.msg || '';
       const isAuthError =
         errorMsg.includes('token') ||
@@ -69,7 +89,6 @@ request.interceptors.response.use(
       if (isAuthError && !originalRequest._retry) {
         originalRequest._retry = true;
 
-        // 尝试使用 refresh token 刷新
         const refreshToken = localStorage.getItem('refresh_token');
         if (refreshToken) {
           try {
@@ -78,23 +97,20 @@ request.interceptors.response.use(
             // localStorage.setItem('access_token', response.data.access_token);
             // return request(originalRequest);
 
-            // 目前直接清除认证并跳转
             clearAuthAndRedirect();
             return Promise.reject(error);
           } catch (refreshError) {
-            // Refresh token 也失效，清除本地存储并跳转到登录页
             clearAuthAndRedirect();
             return Promise.reject(refreshError);
           }
         } else {
-          // 没有 refresh token，直接清除并跳转
           clearAuthAndRedirect();
           return Promise.reject(error);
         }
       }
     }
 
-    // 增强错误信息，从 BaseResponse 中提取 msg
+    // 增强错误信息
     if (error.response?.data?.msg) {
       error.message = error.response.data.msg;
     }
