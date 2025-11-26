@@ -2,6 +2,8 @@
 
 一个现代化的 vite + React + TypeScript 前端项目模板，集成了最佳实践和常用工具。
 
+[online demo](https://g3nprjxy.pinit.eth.limo/)(Powered by pinme)
+
 ## 🎯 特性
 
 ### 核心技术栈
