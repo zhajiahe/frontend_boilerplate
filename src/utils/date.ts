@@ -1,5 +1,8 @@
+import type { TFunction } from 'i18next';
+
 /**
  * 日期格式化工具函数
+ * 支持 i18n 国际化
  */
 
 /**
@@ -16,84 +19,93 @@ export const parseBackendDate = (dateString: string): Date => {
 };
 
 /**
- * 格式化时间为 HH:MM 格式（中国时区）
+ * 根据语言获取 locale
+ */
+const getLocale = (lang: string): string => {
+  return lang.startsWith('zh') ? 'zh-CN' : 'en-US';
+};
+
+/**
+ * 格式化时间为 HH:MM 格式（本地时区）
  * @param dateString 日期字符串
+ * @param t i18n 翻译函数
+ * @param lang 当前语言
  * @returns 格式化后的时间字符串
  */
-export const formatTime = (dateString: string): string => {
+export const formatTime = (dateString: string, t: TFunction, lang = 'en'): string => {
   try {
     const date = parseBackendDate(dateString);
     if (Number.isNaN(date.getTime())) {
-      return '时间未知';
+      return t('date.unknown_time');
     }
-    return date.toLocaleTimeString('zh-CN', {
+    return date.toLocaleTimeString(getLocale(lang), {
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'Asia/Shanghai',
     });
-  } catch (e) {
-    console.error('Error formatting time:', dateString, e);
-    return '时间未知';
+  } catch {
+    return t('date.unknown_time');
   }
 };
 
 /**
- * 格式化日期为 M/D 格式（中国时区）
+ * 格式化日期为本地格式
  * @param dateString 日期字符串
+ * @param t i18n 翻译函数
+ * @param lang 当前语言
  * @returns 格式化后的日期字符串
  */
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string, t: TFunction, lang = 'en'): string => {
   try {
     const date = parseBackendDate(dateString);
     if (Number.isNaN(date.getTime())) {
-      return '日期未知';
+      return t('date.unknown_date');
     }
-    return date.toLocaleDateString('zh-CN', {
+    return date.toLocaleDateString(getLocale(lang), {
       month: 'numeric',
       day: 'numeric',
-      timeZone: 'Asia/Shanghai',
     });
-  } catch (e) {
-    console.error('Error formatting date:', dateString, e);
-    return '日期未知';
+  } catch {
+    return t('date.unknown_date');
   }
 };
 
 /**
- * 格式化完整日期时间（中国时区）
+ * 格式化完整日期时间
  * @param dateString 日期字符串
+ * @param t i18n 翻译函数
+ * @param lang 当前语言
  * @returns 格式化后的日期时间字符串
  */
-export const formatDateTime = (dateString: string): string => {
+export const formatDateTime = (dateString: string, t: TFunction, lang = 'en'): string => {
   try {
     const date = parseBackendDate(dateString);
     if (Number.isNaN(date.getTime())) {
-      return '时间未知';
+      return t('date.unknown_time');
     }
-    return date.toLocaleString('zh-CN', {
+    return date.toLocaleString(getLocale(lang), {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'Asia/Shanghai',
     });
-  } catch (e) {
-    console.error('Error formatting datetime:', dateString, e);
-    return '时间未知';
+  } catch {
+    return t('date.unknown_time');
   }
 };
 
 /**
  * 获取相对时间描述（如：刚刚、5分钟前、1小时前）
  * @param dateString 日期字符串
+ * @param t i18n 翻译函数
+ * @param lang 当前语言
  * @returns 相对时间描述
  */
-export const getRelativeTime = (dateString: string): string => {
+export const getRelativeTime = (dateString: string, t: TFunction, lang = 'en'): string => {
   try {
     const date = parseBackendDate(dateString);
     if (Number.isNaN(date.getTime())) {
-      return '时间未知';
+      return t('date.unknown_time');
     }
 
     const now = new Date();
@@ -103,15 +115,14 @@ export const getRelativeTime = (dateString: string): string => {
     const diffHour = Math.floor(diffMin / 60);
     const diffDay = Math.floor(diffHour / 24);
 
-    if (diffSec < 60) return '刚刚';
-    if (diffMin < 60) return `${diffMin}分钟前`;
-    if (diffHour < 24) return `${diffHour}小时前`;
-    if (diffDay < 7) return `${diffDay}天前`;
+    if (diffSec < 60) return t('date.just_now');
+    if (diffMin < 60) return t('date.minutes_ago', { count: diffMin });
+    if (diffHour < 24) return t('date.hours_ago', { count: diffHour });
+    if (diffDay < 7) return t('date.days_ago', { count: diffDay });
 
     // 超过7天显示具体日期
-    return formatDate(dateString);
-  } catch (e) {
-    console.error('Error getting relative time:', dateString, e);
-    return '时间未知';
+    return formatDate(dateString, t, lang);
+  } catch {
+    return t('date.unknown_time');
   }
 };

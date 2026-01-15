@@ -40,7 +40,6 @@ export const FormExample = () => {
     // 模拟 API 请求
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    console.log('Form data:', data);
     toast({
       title: t('auth.register_success'),
       description: t('auth.login_success_desc', { username: data.username }),

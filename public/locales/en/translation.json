@@ -183,7 +183,24 @@
     "password_min": "Password must be at least 6 characters",
     "password_max": "Password must be at most 50 characters",
     "password_mismatch": "Passwords do not match",
+    "password_lowercase": "Password must contain a lowercase letter",
+    "password_uppercase": "Password must contain an uppercase letter",
+    "password_digit": "Password must contain a number",
+    "password_special": "Password must contain a special character",
     "nickname_required": "Nickname is required",
-    "nickname_max": "Nickname must be at most 30 characters"
+    "nickname_max": "Nickname must be at most 30 characters",
+    "bio_max": "Bio must be at most 200 characters",
+    "url_invalid": "Please enter a valid URL"
+  },
+  "date": {
+    "unknown_time": "Unknown time",
+    "unknown_date": "Unknown date",
+    "just_now": "Just now",
+    "minutes_ago": "{{count}} minute ago",
+    "minutes_ago_plural": "{{count}} minutes ago",
+    "hours_ago": "{{count}} hour ago",
+    "hours_ago_plural": "{{count}} hours ago",
+    "days_ago": "{{count}} day ago",
+    "days_ago_plural": "{{count}} days ago"
   }
 }

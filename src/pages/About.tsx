@@ -2,6 +2,7 @@ import { CheckCircle2Icon, ExternalLinkIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import i18n from '@/i18n';
 
 /**
  * 关于页面
@@ -104,7 +105,7 @@ export const About = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    {navigator.language.startsWith('zh')
+                    {i18n.language.startsWith('zh')
                       ? techDescriptions[tech.descKey].zh
                       : techDescriptions[tech.descKey].en}
                   </p>

@@ -183,7 +183,21 @@
     "password_min": "密码至少 6 个字符",
     "password_max": "密码最多 50 个字符",
     "password_mismatch": "两次输入的密码不一致",
+    "password_lowercase": "密码必须包含小写字母",
+    "password_uppercase": "密码必须包含大写字母",
+    "password_digit": "密码必须包含数字",
+    "password_special": "密码必须包含特殊字符",
     "nickname_required": "昵称不能为空",
-    "nickname_max": "昵称最多 30 个字符"
+    "nickname_max": "昵称最多 30 个字符",
+    "bio_max": "简介最多 200 个字符",
+    "url_invalid": "请输入有效的 URL"
+  },
+  "date": {
+    "unknown_time": "时间未知",
+    "unknown_date": "日期未知",
+    "just_now": "刚刚",
+    "minutes_ago": "{{count}} 分钟前",
+    "hours_ago": "{{count}} 小时前",
+    "days_ago": "{{count}} 天前"
   }
 }
