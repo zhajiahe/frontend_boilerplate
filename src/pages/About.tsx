@@ -2,7 +2,6 @@ import { CheckCircle2Icon, ExternalLinkIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import i18n from '@/i18n';
 
 /**
  * 关于页面
@@ -25,21 +24,6 @@ export const About = () => {
     { name: 'React Router', descKey: 'router', url: 'https://reactrouter.com' },
     { name: 'i18next', descKey: 'i18next', url: 'https://www.i18next.com' },
   ];
-
-  const techDescriptions: Record<string, { en: string; zh: string }> = {
-    react: { en: 'Modern UI Framework', zh: '现代化的 UI 框架' },
-    typescript: { en: 'Type-safe JavaScript', zh: '类型安全的 JavaScript' },
-    vite: { en: 'Fast Build Tool', zh: '快速的构建工具' },
-    tanstack: { en: 'Powerful Data Fetching', zh: '强大的数据获取库' },
-    rhf: { en: 'High-performance Forms', zh: '高性能表单库' },
-    zod: { en: 'TypeScript-first Schema Validation', zh: 'TypeScript 优先的验证' },
-    zustand: { en: 'Lightweight State Management', zh: '轻量级状态管理' },
-    vitest: { en: 'Fast Testing Framework', zh: '快速的测试框架' },
-    shadcn: { en: 'Beautiful UI Components', zh: '美观的 UI 组件库' },
-    tailwind: { en: 'Utility-first CSS', zh: '实用优先的 CSS 框架' },
-    router: { en: 'Declarative Routing', zh: '声明式路由管理' },
-    i18next: { en: 'Internationalization', zh: '国际化框架' },
-  };
 
   const featureKeys = [
     'ready_to_use',
@@ -104,11 +88,7 @@ export const About = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    {i18n.language.startsWith('zh')
-                      ? techDescriptions[tech.descKey].zh
-                      : techDescriptions[tech.descKey].en}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{t(`about.tech_desc.${tech.descKey}`)}</p>
                 </CardContent>
               </Card>
             ))}

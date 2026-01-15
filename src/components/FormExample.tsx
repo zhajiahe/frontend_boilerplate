@@ -37,7 +37,7 @@ export const FormExample = () => {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    // 模拟 API 请求
+    // Simulate API request
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     toast({
@@ -56,7 +56,7 @@ export const FormExample = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* 用户名 */}
+          {/* Username */}
           <div className="space-y-2">
             <Label htmlFor="username">{t('auth.username')}</Label>
             <Input
@@ -68,7 +68,7 @@ export const FormExample = () => {
             {errors.username && <p className="text-sm text-destructive">{errors.username.message}</p>}
           </div>
 
-          {/* 邮箱 */}
+          {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email">{t('auth.email')}</Label>
             <Input
@@ -81,7 +81,7 @@ export const FormExample = () => {
             {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
 
-          {/* 密码 */}
+          {/* Password */}
           <div className="space-y-2">
             <Label htmlFor="password">{t('auth.password')}</Label>
             <Input
@@ -94,7 +94,7 @@ export const FormExample = () => {
             {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
           </div>
 
-          {/* 确认密码 */}
+          {/* Confirm Password */}
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">{t('auth.confirm_password')}</Label>
             <Input

@@ -110,6 +110,20 @@
       "code_quality": "Biome code standards"
     },
     "tech_stack": "Tech Stack",
+    "tech_desc": {
+      "react": "Modern UI Framework",
+      "typescript": "Type-safe JavaScript",
+      "vite": "Fast Build Tool",
+      "tanstack": "Powerful Data Fetching",
+      "rhf": "High-performance Forms",
+      "zod": "TypeScript-first Schema Validation",
+      "zustand": "Lightweight State Management",
+      "vitest": "Fast Testing Framework",
+      "shadcn": "Beautiful UI Components",
+      "tailwind": "Utility-first CSS",
+      "router": "Declarative Routing",
+      "i18next": "Internationalization"
+    },
     "quick_start": "Quick Start",
     "quick_start_desc": "Get started in a few steps",
     "more_info": "For more information, check the project's README.md file."

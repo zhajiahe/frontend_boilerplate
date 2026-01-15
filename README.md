@@ -45,7 +45,6 @@
 
 ```
 src/
-├── api/                    # API 类型定义（自动生成）
 ├── components/             # 可复用组件
 │   ├── ui/                 # shadcn/ui 组件
 │   ├── FormExample.tsx     # 表单示例组件
@@ -264,7 +263,6 @@ bunx shadcn@latest add input
 | `createProfileSchema(t)` | 个人资料 |
 
 > 注：所有 `createXxxSchema(t)` 函数接受 i18next 的 `t` 函数以支持国际化。
-> 同时保留了静态 Schema（如 `loginSchema`）以保持向后兼容。
 
 ## 🎨 样式指南
 

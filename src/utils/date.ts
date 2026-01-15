@@ -1,8 +1,16 @@
 import type { TFunction } from 'i18next';
 
 /**
- * 日期格式化工具函数
- * 支持 i18n 国际化
+ * Date formatting utility functions with i18n support
+ *
+ * Usage example:
+ * ```tsx
+ * import { useTranslation } from 'react-i18next';
+ * import { getRelativeTime } from '@/utils/date';
+ *
+ * const { t, i18n } = useTranslation();
+ * const timeAgo = getRelativeTime('2024-01-15T10:30:00Z', t, i18n.language);
+ * ```
  */
 
 /**

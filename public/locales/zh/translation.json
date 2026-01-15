@@ -110,6 +110,20 @@
       "code_quality": "Biome 代码规范"
     },
     "tech_stack": "技术栈",
+    "tech_desc": {
+      "react": "现代化的 UI 框架",
+      "typescript": "类型安全的 JavaScript",
+      "vite": "快速的构建工具",
+      "tanstack": "强大的数据获取库",
+      "rhf": "高性能表单库",
+      "zod": "TypeScript 优先的验证",
+      "zustand": "轻量级状态管理",
+      "vitest": "快速的测试框架",
+      "shadcn": "美观的 UI 组件库",
+      "tailwind": "实用优先的 CSS 框架",
+      "router": "声明式路由管理",
+      "i18next": "国际化框架"
+    },
     "quick_start": "快速开始",
     "quick_start_desc": "几步即可开始使用模板",
     "more_info": "更多信息请查看项目的 README.md 文件。"
