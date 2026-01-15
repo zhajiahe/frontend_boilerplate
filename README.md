@@ -2,7 +2,7 @@
 
 一个现代化的 Vite + React + TypeScript 前端项目模板，集成了最佳实践和常用工具。
 
-[online demo](https://g3nprjxy.pinit.eth.limo/)(Powered by pinme)
+[online demo](https://b0ddda1e.pinit.eth.limo/)(Powered by pinme)
 
 ## 🎯 特性
 
