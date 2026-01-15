@@ -34,3 +34,4 @@ export const AppInitializer = ({ children }: AppInitializerProps) => {
 
   return <>{children}</>;
 };
+
