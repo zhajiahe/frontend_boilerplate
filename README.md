@@ -75,21 +75,35 @@ src/
 
 ## 🚀 快速开始
 
-### 1. 安装依赖
+### 使用模板创建新项目
 
 ```bash
+# 1. 克隆或复制模板
+git clone <template-repo-url> my-new-project
+cd my-new-project
+
+# 2. 运行初始化脚本（自动配置项目名称、重置 git 等）
+bun run init
+
+# 3. 安装依赖
 bun install
-```
 
-### 2. 启动开发服务器
-
-```bash
+# 4. 启动开发服务器
 bun run dev
 ```
 
 访问 http://localhost:5173
 
-### 3. 构建生产版本
+### 手动初始化（可选）
+
+如果不想使用初始化脚本，可以手动操作：
+
+1. 修改 `package.json` 中的 `name` 字段
+2. 修改 `index.html` 中的 `<title>`
+3. 复制 `.env.example` 为 `.env`（如有）
+4. 删除 `.git` 并重新 `git init`
+
+### 构建生产版本
 
 ```bash
 bun run build
@@ -98,6 +112,9 @@ bun run build
 ## 🛠️ 可用脚本
 
 ```bash
+# 项目初始化
+bun run init             # 初始化新项目（交互式配置）
+
 # 开发
 bun run dev              # 启动开发服务器
 bun run build            # 构建生产版本
@@ -291,6 +308,75 @@ import { useThemeStore } from '@/stores/themeStore';
 
 const { theme, toggleTheme } = useThemeStore();
 ```
+
+## 📖 新项目开发指南
+
+### 添加新页面
+
+```bash
+# 1. 创建页面文件
+touch src/pages/MyNewPage.tsx
+```
+
+```tsx
+// src/pages/MyNewPage.tsx
+import { useTranslation } from 'react-i18next';
+
+export const MyNewPage = () => {
+  const { t } = useTranslation();
+  return <div>{t('my_page.title')}</div>;
+};
+```
+
+```tsx
+// 2. 在 App.tsx 中添加路由
+<Route path="/my-page" element={<MyNewPage />} />
+```
+
+### 添加 UI 组件
+
+```bash
+bunx shadcn@latest add dialog
+bunx shadcn@latest add table
+bunx shadcn@latest add form
+```
+
+### 连接后端 API
+
+1. 配置环境变量：
+```bash
+# .env
+VITE_API_BASE_URL=http://localhost:8000/api/v1
+```
+
+2. 使用 API hooks：
+```tsx
+import { useApiQuery, useApiMutation } from '@/hooks/useApi';
+
+// GET 请求
+const { data, isLoading } = useApiQuery(['users'], '/users');
+
+// POST 请求
+const mutation = useApiMutation('/users', 'post');
+mutation.mutate({ name: 'John' });
+```
+
+### 可删除的示例文件
+
+如果不需要示例代码，可以安全删除：
+- `src/pages/Examples.tsx`
+- `src/pages/Dashboard.tsx`
+- `src/components/FormExample.tsx`
+
+> 注意：删除后需要更新 `App.tsx` 中的路由配置
+
+### 保留的核心文件
+
+以下文件建议保留：
+- `src/components/ui/*` - shadcn/ui 组件库
+- `src/lib/validations.ts` - 表单验证工具
+- `src/stores/*` - 认证和主题状态管理
+- `src/utils/*` - 工具函数
 
 ## 🤖 AI Agent 指南
 

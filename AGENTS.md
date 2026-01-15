@@ -32,6 +32,9 @@ Core features include form validation (React Hook Form + Zod), data fetching
 ## Setup & Dev Commands
 
 ```bash
+# Initialize new project from template
+bun run init
+
 # Install dependencies
 bun install
 
@@ -47,6 +50,14 @@ bun run preview
 # Generate API client from OpenAPI spec
 bun run gen:apis
 ```
+
+**Project Initialization:**
+The `bun run init` command runs an interactive script that:
+- Updates project name in `package.json`
+- Updates page title in `index.html`
+- Creates `.env` from `.env.example`
+- Optionally removes example pages
+- Optionally resets git history
 
 ## Testing Instructions
 
