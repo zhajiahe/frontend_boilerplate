@@ -1,18 +1,9 @@
 import { create } from 'zustand';
+import type { User } from '@/types/user';
 import { storage } from '@/utils/storage';
 
-/**
- * 用户信息类型
- * 根据实际后端返回格式调整
- */
-export interface User {
-  id: string;
-  username: string;
-  nickname?: string;
-  email?: string;
-  avatar?: string;
-  [key: string]: any;
-}
+// 重新导出 User 类型以保持向后兼容
+export type { User } from '@/types/user';
 
 interface AuthState {
   user: User | null;
@@ -22,6 +13,7 @@ interface AuthState {
   // Actions
   setAuth: (user: User, token: string, refreshToken: string) => void;
   clearAuth: () => void;
+  /** 登出（仅清除状态，跳转由调用方处理） */
   logout: () => void;
   updateUser: (user: User) => void;
   initAuth: () => void;
@@ -47,8 +39,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     storage.clearAuth();
     set({ user: null, token: null, isAuthenticated: false });
-    // 跳转到登录页
-    window.location.href = '/login';
+    // 注意：跳转由调用方通过 navigate('/login') 处理
   },
 
   updateUser: (user) => {

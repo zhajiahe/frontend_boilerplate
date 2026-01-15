@@ -35,4 +35,3 @@ const customRender = (ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>
 // 重新导出所有 testing-library 工具
 export * from '@testing-library/react';
 export { customRender as render };
-

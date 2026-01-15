@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { storage } from '@/utils/storage';
 
 type Theme = 'light' | 'dark';
 
@@ -14,7 +15,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
   setTheme: (theme) => {
     set({ theme });
-    localStorage.setItem('theme', theme);
+    storage.setTheme(theme);
     // 应用主题到 document
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -29,7 +30,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   },
 
   initTheme: () => {
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
+    const savedTheme = storage.getTheme();
     const theme = savedTheme || 'light';
     get().setTheme(theme);
   },

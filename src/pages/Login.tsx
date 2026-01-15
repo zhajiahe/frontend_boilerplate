@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { type LoginFormData, loginSchema } from '@/lib/validations';
+import { createLoginSchema, type LoginFormData } from '@/lib/validations';
 import { useAuthStore } from '@/stores/authStore';
 
 /**
@@ -19,6 +20,9 @@ export const Login = () => {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
   const { toast } = useToast();
+
+  // 使用 i18n 创建 schema
+  const loginSchema = useMemo(() => createLoginSchema(t), [t]);
 
   const {
     register,
@@ -48,10 +52,11 @@ export const Login = () => {
       });
 
       navigate('/');
-    } catch (err: any) {
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : t('auth.login_failed_desc');
       toast({
         title: t('auth.login_failed'),
-        description: err.message || t('auth.login_failed_desc'),
+        description: errorMessage,
         variant: 'destructive',
       });
     }

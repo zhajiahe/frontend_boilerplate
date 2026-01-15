@@ -11,7 +11,7 @@ import {
   SunIcon,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -22,20 +22,16 @@ import {
 import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/stores/themeStore';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
 /**
  * 应用布局组件
- * 包含顶部导航栏
+ * 包含顶部导航栏，使用 Outlet 渲染子路由
  */
 const languages = [
   { code: 'en', label: 'English' },
   { code: 'zh', label: '中文' },
 ];
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = () => {
   const location = useLocation();
   const { theme, toggleTheme } = useThemeStore();
   const { t, i18n } = useTranslation();
@@ -137,7 +133,9 @@ export const Layout = ({ children }: LayoutProps) => {
       </header>
 
       {/* 页面内容 */}
-      <main>{children}</main>
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 };

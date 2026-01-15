@@ -1,4 +1,5 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import { storage } from '@/utils/storage';
 
 /**
  * 获取登录页路径
@@ -13,9 +14,7 @@ const getLoginPath = () => {
  * 清除认证信息并重定向到登录页
  */
 const clearAuthAndRedirect = () => {
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
-  localStorage.removeItem('user');
+  storage.clearAuth();
 
   const currentPath = window.location.pathname;
   const loginPath = getLoginPath();
@@ -45,7 +44,7 @@ const request = axios.create({
  */
 request.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('access_token');
+    const token = storage.getToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -64,7 +63,9 @@ request.interceptors.response.use(
   (response) => {
     // 检查 BaseResponse 格式的错误（如果后端使用统一响应格式）
     if (response.data && response.data.success === false) {
-      const error: any = new Error(response.data.msg || '请求失败');
+      const error = new Error(response.data.msg || '请求失败') as Error & {
+        response?: { data: unknown; status: number };
+      };
       error.response = {
         data: response.data,
         status: response.data.code,
@@ -73,9 +74,7 @@ request.interceptors.response.use(
     }
     return response;
   },
-  async (error: AxiosError<any>) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-
+  async (error: AxiosError<{ msg?: string }>) => {
     // 处理 401/403 认证错误
     if (error.response?.status === 401 || error.response?.status === 403) {
       const errorMsg = error.response?.data?.msg || '';
@@ -86,27 +85,11 @@ request.interceptors.response.use(
         errorMsg.includes('登录') ||
         error.response?.status === 401;
 
-      if (isAuthError && !originalRequest._retry) {
-        originalRequest._retry = true;
-
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
-          try {
-            // TODO: 实现 refresh token 逻辑
-            // const response = await axios.post('/api/v1/auth/refresh', { refresh_token: refreshToken });
-            // localStorage.setItem('access_token', response.data.access_token);
-            // return request(originalRequest);
-
-            clearAuthAndRedirect();
-            return Promise.reject(error);
-          } catch (refreshError) {
-            clearAuthAndRedirect();
-            return Promise.reject(refreshError);
-          }
-        } else {
-          clearAuthAndRedirect();
-          return Promise.reject(error);
-        }
+      if (isAuthError) {
+        // 直接清除认证并重定向，不再尝试刷新 token
+        // 如需实现 refresh token，请在此处添加逻辑
+        clearAuthAndRedirect();
+        return Promise.reject(error);
       }
     }
 

@@ -20,7 +20,10 @@ import request from '@/utils/request';
  * mutation.mutate({ name: 'John' });
  *
  * // 带自动刷新
- * const mutation = useApiMutationWithRefresh('/users', 'post', [['users']]);
+ * const mutation = useApiMutationWithRefresh('/users', 'post', {
+ *   invalidateQueries: [['users']],
+ *   onError: (error) => console.error(error),
+ * });
  * ```
  */
 
@@ -29,10 +32,10 @@ type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 /**
  * 通用 GET 请求 Hook
  */
-export function useApiQuery<TData = any>(
+export function useApiQuery<TData = unknown>(
   queryKey: readonly unknown[],
   url: string,
-  params?: Record<string, any>,
+  params?: Record<string, unknown>,
   options?: Omit<UseQueryOptions<TData>, 'queryKey' | 'queryFn'>
 ) {
   return useQuery<TData>({
@@ -48,7 +51,7 @@ export function useApiQuery<TData = any>(
 /**
  * 通用 Mutation Hook（POST/PUT/PATCH/DELETE）
  */
-export function useApiMutation<TData = any, TVariables = any>(
+export function useApiMutation<TData = unknown, TVariables = unknown>(
   url: string,
   method: Exclude<HttpMethod, 'get'> = 'post',
   options?: Omit<UseMutationOptions<TData, Error, TVariables>, 'mutationFn'>
@@ -62,13 +65,22 @@ export function useApiMutation<TData = any, TVariables = any>(
   });
 }
 
+interface MutationWithRefreshOptions<TData, TVariables> {
+  /** 成功后需要刷新的查询 key 列表 */
+  invalidateQueries: readonly unknown[][];
+  /** 成功回调 */
+  onSuccess?: (data: TData, variables: TVariables) => void;
+  /** 错误回调 */
+  onError?: (error: Error, variables: TVariables) => void;
+}
+
 /**
- * 带自动刷新的 Mutation Hook
+ * 带自动刷新和错误处理的 Mutation Hook
  */
-export function useApiMutationWithRefresh<TData = any, TVariables = any>(
+export function useApiMutationWithRefresh<TData = unknown, TVariables = unknown>(
   url: string,
   method: Exclude<HttpMethod, 'get'> = 'post',
-  invalidateQueries: readonly unknown[][]
+  options: MutationWithRefreshOptions<TData, TVariables>
 ) {
   const queryClient = useQueryClient();
 
@@ -77,10 +89,17 @@ export function useApiMutationWithRefresh<TData = any, TVariables = any>(
       const response = await request[method]<TData>(url, variables);
       return response.data;
     },
-    onSuccess: () => {
-      for (const queryKey of invalidateQueries) {
+    onSuccess: (data, variables) => {
+      // 刷新指定的查询
+      for (const queryKey of options.invalidateQueries) {
         queryClient.invalidateQueries({ queryKey });
       }
+      // 调用用户的成功回调
+      options.onSuccess?.(data, variables);
+    },
+    onError: (error, variables) => {
+      // 调用用户的错误回调
+      options.onError?.(error, variables);
     },
   });
 }

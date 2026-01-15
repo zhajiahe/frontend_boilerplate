@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,23 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { emailSchema, passwordSchema, usernameSchema } from '@/lib/validations';
-
-// 注册表单 Schema（扩展了昵称字段）
-const registerFormSchema = z
-  .object({
-    username: usernameSchema,
-    email: emailSchema,
-    nickname: z.string().min(1, '昵称不能为空').max(30, '昵称最多 30 个字符'),
-    password: passwordSchema,
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: '两次输入的密码不一致',
-    path: ['confirmPassword'],
-  });
-
-type RegisterFormData = z.infer<typeof registerFormSchema>;
+import { createEmailSchema, createPasswordSchema, createUsernameSchema } from '@/lib/validations';
 
 /**
  * 注册页面
@@ -34,6 +19,26 @@ export const Register = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // 使用 i18n 创建 schema
+  const registerFormSchema = useMemo(
+    () =>
+      z
+        .object({
+          username: createUsernameSchema(t),
+          email: createEmailSchema(t),
+          nickname: z.string().min(1, t('validation.nickname_required')).max(30, t('validation.nickname_max')),
+          password: createPasswordSchema(t),
+          confirmPassword: z.string(),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+          message: t('validation.password_mismatch'),
+          path: ['confirmPassword'],
+        }),
+    [t]
+  );
+
+  type RegisterFormData = z.infer<typeof registerFormSchema>;
 
   const {
     register,
@@ -53,10 +58,11 @@ export const Register = () => {
         description: t('auth.register_success_desc'),
       });
       navigate('/login');
-    } catch (err: any) {
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : t('auth.register_failed_desc');
       toast({
         title: t('auth.register_failed'),
-        description: err.message || t('auth.register_failed_desc'),
+        description: errorMessage,
         variant: 'destructive',
       });
     }

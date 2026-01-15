@@ -1,37 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-
-/**
- * 表单验证 Schema
- * 使用 Zod 定义表单字段和验证规则
- */
-const formSchema = z
-  .object({
-    username: z
-      .string()
-      .min(3, '用户名至少 3 个字符')
-      .max(20, '用户名最多 20 个字符')
-      .regex(/^[a-zA-Z0-9_]+$/, '用户名只能包含字母、数字和下划线'),
-    email: z.string().email('请输入有效的邮箱地址'),
-    password: z.string().min(6, '密码至少 6 个字符').max(50, '密码最多 50 个字符'),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: '两次输入的密码不一致',
-    path: ['confirmPassword'],
-  });
-
-type FormData = z.infer<typeof formSchema>;
+import { type RegisterFormData, registerSchema } from '@/lib/validations';
 
 /**
  * 表单示例组件
  * 展示 React Hook Form + Zod 的用法
+ * 复用 validations.ts 中的 registerSchema
  */
 export const FormExample = () => {
   const { toast } = useToast();
@@ -41,8 +20,8 @@ export const FormExample = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       username: '',
       email: '',
@@ -51,7 +30,7 @@ export const FormExample = () => {
     },
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     // 模拟 API 请求
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -131,4 +110,3 @@ export const FormExample = () => {
     </Card>
   );
 };
-
