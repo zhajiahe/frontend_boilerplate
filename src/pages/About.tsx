@@ -125,16 +125,16 @@ export const About = () => {
               <div className="bg-muted p-4 rounded-lg">
                 <pre className="text-sm overflow-x-auto">
                   <code>{`# Install dependencies
-pnpm install
+bun install
 
 # Start dev server
-pnpm run dev
+bun run dev
 
 # Run tests
-pnpm run test:run
+bun run test:run
 
 # Build for production
-pnpm run build`}</code>
+bun run build`}</code>
                 </pre>
               </div>
               <p className="text-sm text-muted-foreground">{t('about.more_info')}</p>
