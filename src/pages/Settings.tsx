@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeftIcon, KeyIcon, MoonIcon, SaveIcon, SunIcon, UserIcon } from 'lucide-react';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -12,29 +13,11 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { emailSchema, passwordSchema } from '@/lib/validations';
+import { createEmailSchema, createPasswordSchema } from '@/lib/validations';
 import { useThemeStore } from '@/stores/themeStore';
 
-// 个人信息表单 Schema
-const profileFormSchema = z.object({
-  nickname: z.string().min(1, '昵称不能为空').max(30, '昵称最多 30 个字符'),
-  email: emailSchema,
-});
-
-// 密码修改表单 Schema
-const passwordFormSchema = z
-  .object({
-    oldPassword: passwordSchema,
-    newPassword: passwordSchema,
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: '两次输入的密码不一致',
-    path: ['confirmPassword'],
-  });
-
-type ProfileFormData = z.infer<typeof profileFormSchema>;
-type PasswordFormData = z.infer<typeof passwordFormSchema>;
+type ProfileFormData = { nickname: string; email: string };
+type PasswordFormData = { oldPassword: string; newPassword: string; confirmPassword: string };
 
 /**
  * 设置页面
@@ -44,6 +27,31 @@ export const Settings = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { theme, toggleTheme } = useThemeStore();
+
+  // 使用 i18n 创建 Schema
+  const profileFormSchema = useMemo(
+    () =>
+      z.object({
+        nickname: z.string().min(1, t('validation.nickname_required')).max(30, t('validation.nickname_max')),
+        email: createEmailSchema(t),
+      }),
+    [t]
+  );
+
+  const passwordFormSchema = useMemo(
+    () =>
+      z
+        .object({
+          oldPassword: createPasswordSchema(t),
+          newPassword: createPasswordSchema(t),
+          confirmPassword: z.string(),
+        })
+        .refine((data) => data.newPassword === data.confirmPassword, {
+          message: t('validation.password_mismatch'),
+          path: ['confirmPassword'],
+        }),
+    [t]
+  );
 
   // 个人信息表单
   const profileForm = useForm<ProfileFormData>({
