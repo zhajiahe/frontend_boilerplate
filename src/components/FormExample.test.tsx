@@ -14,23 +14,23 @@ describe('FormExample 组件', () => {
   it('应该渲染表单字段', () => {
     render(<FormExample />);
 
-    expect(screen.getByLabelText(/用户名/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/邮箱/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/^密码$/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/确认密码/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /注册/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /register/i })).toBeInTheDocument();
   });
 
   it('应该显示用户名验证错误', async () => {
     const user = userEvent.setup();
     render(<FormExample />);
 
-    const usernameInput = screen.getByLabelText(/用户名/i);
+    const usernameInput = screen.getByLabelText(/username/i);
     await user.type(usernameInput, 'ab');
-    await user.click(screen.getByRole('button', { name: /注册/i }));
+    await user.click(screen.getByRole('button', { name: /register/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/用户名至少 3 个字符/i)).toBeInTheDocument();
+      expect(screen.getByText(/at least 3 characters/i)).toBeInTheDocument();
     });
   });
 
@@ -38,14 +38,14 @@ describe('FormExample 组件', () => {
     const user = userEvent.setup();
     render(<FormExample />);
 
-    await user.type(screen.getByLabelText(/用户名/i), 'testuser');
-    await user.type(screen.getByLabelText(/邮箱/i), 'test@example.com');
-    await user.type(screen.getByLabelText(/^密码$/i), 'password123');
-    await user.type(screen.getByLabelText(/确认密码/i), 'different');
-    await user.click(screen.getByRole('button', { name: /注册/i }));
+    await user.type(screen.getByLabelText(/username/i), 'testuser');
+    await user.type(screen.getByLabelText(/email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/^password$/i), 'password123');
+    await user.type(screen.getByLabelText(/confirm password/i), 'different');
+    await user.click(screen.getByRole('button', { name: /register/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/两次输入的密码不一致/i)).toBeInTheDocument();
+      expect(screen.getByText(/do not match/i)).toBeInTheDocument();
     });
   });
 
@@ -53,15 +53,15 @@ describe('FormExample 组件', () => {
     const user = userEvent.setup();
     render(<FormExample />);
 
-    await user.type(screen.getByLabelText(/用户名/i), 'testuser');
-    await user.type(screen.getByLabelText(/邮箱/i), 'test@example.com');
-    await user.type(screen.getByLabelText(/^密码$/i), 'password123');
-    await user.type(screen.getByLabelText(/确认密码/i), 'password123');
-    await user.click(screen.getByRole('button', { name: /注册/i }));
+    await user.type(screen.getByLabelText(/username/i), 'testuser');
+    await user.type(screen.getByLabelText(/email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/^password$/i), 'password123');
+    await user.type(screen.getByLabelText(/confirm password/i), 'password123');
+    await user.click(screen.getByRole('button', { name: /register/i }));
 
     // 提交时按钮应该显示加载状态
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /提交中/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /registering/i })).toBeInTheDocument();
     });
   });
 });

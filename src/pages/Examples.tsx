@@ -1,5 +1,6 @@
 import { CheckIcon, CodeIcon, CopyIcon, DatabaseIcon, LayoutIcon, PaletteIcon } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
  */
 export const Examples = () => {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [switchValue, setSwitchValue] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -22,8 +24,8 @@ export const Examples = () => {
     navigator.clipboard.writeText(text);
     setCopied(true);
     toast({
-      title: '已复制',
-      description: '代码已复制到剪贴板',
+      title: t('examples.copied'),
+      description: t('examples.copied_to_clipboard'),
     });
     setTimeout(() => setCopied(false), 2000);
   };
@@ -31,7 +33,7 @@ export const Examples = () => {
   const codeExample = `import { Button } from '@/components/ui/button';
 
 <Button variant="default">
-  点击我
+  Click me
 </Button>`;
 
   return (
@@ -39,8 +41,8 @@ export const Examples = () => {
       {/* 页面头部 */}
       <div className="border-b bg-card">
         <div className="container py-6 px-4">
-          <h1 className="text-3xl font-bold tracking-tight">组件示例</h1>
-          <p className="text-muted-foreground mt-1">探索模板中可用的 UI 组件</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('examples.title')}</h1>
+          <p className="text-muted-foreground mt-1">{t('examples.subtitle')}</p>
         </div>
       </div>
 
@@ -49,19 +51,19 @@ export const Examples = () => {
           <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
             <TabsTrigger value="buttons" className="gap-2">
               <PaletteIcon size={16} />
-              <span className="hidden sm:inline">按钮</span>
+              <span className="hidden sm:inline">{t('examples.buttons')}</span>
             </TabsTrigger>
             <TabsTrigger value="forms" className="gap-2">
               <LayoutIcon size={16} />
-              <span className="hidden sm:inline">表单</span>
+              <span className="hidden sm:inline">{t('examples.forms')}</span>
             </TabsTrigger>
             <TabsTrigger value="feedback" className="gap-2">
               <CodeIcon size={16} />
-              <span className="hidden sm:inline">反馈</span>
+              <span className="hidden sm:inline">{t('examples.feedback')}</span>
             </TabsTrigger>
             <TabsTrigger value="data" className="gap-2">
               <DatabaseIcon size={16} />
-              <span className="hidden sm:inline">数据</span>
+              <span className="hidden sm:inline">{t('examples.data')}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -69,8 +71,8 @@ export const Examples = () => {
           <TabsContent value="buttons" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>按钮变体</CardTitle>
-                <CardDescription>不同样式的按钮组件</CardDescription>
+                <CardTitle>{t('examples.button_variants')}</CardTitle>
+                <CardDescription>{t('examples.button_variants_desc')}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-4">
                 <Button variant="default">Default</Button>
@@ -84,8 +86,8 @@ export const Examples = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>按钮尺寸</CardTitle>
-                <CardDescription>不同大小的按钮</CardDescription>
+                <CardTitle>{t('examples.button_sizes')}</CardTitle>
+                <CardDescription>{t('examples.button_sizes_desc')}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-wrap items-center gap-4">
                 <Button size="sm">Small</Button>
@@ -99,8 +101,8 @@ export const Examples = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>代码示例</CardTitle>
-                <CardDescription>如何使用按钮组件</CardDescription>
+                <CardTitle>{t('examples.code_example')}</CardTitle>
+                <CardDescription>{t('examples.code_example_desc')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="relative">
@@ -124,28 +126,30 @@ export const Examples = () => {
           <TabsContent value="forms" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>输入框</CardTitle>
-                <CardDescription>基础表单输入组件</CardDescription>
+                <CardTitle>{t('examples.input')}</CardTitle>
+                <CardDescription>{t('examples.input_desc')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="example-input">文本输入</Label>
+                  <Label htmlFor="example-input">{t('examples.text_input')}</Label>
                   <Input
                     id="example-input"
-                    placeholder="请输入内容..."
+                    placeholder={t('examples.enter_content')}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                   />
-                  {inputValue && <p className="text-sm text-muted-foreground">你输入了: {inputValue}</p>}
+                  {inputValue && (
+                    <p className="text-sm text-muted-foreground">{t('examples.you_entered', { value: inputValue })}</p>
+                  )}
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="email-input">邮箱</Label>
+                  <Label htmlFor="email-input">{t('examples.email')}</Label>
                   <Input id="email-input" type="email" placeholder="your@email.com" />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="password-input">密码</Label>
+                  <Label htmlFor="password-input">{t('examples.password')}</Label>
                   <Input id="password-input" type="password" placeholder="••••••••" />
                 </div>
               </CardContent>
@@ -153,13 +157,15 @@ export const Examples = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>开关</CardTitle>
-                <CardDescription>切换开关组件</CardDescription>
+                <CardTitle>{t('examples.switch')}</CardTitle>
+                <CardDescription>{t('examples.switch_desc')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center space-x-4">
                   <Switch id="example-switch" checked={switchValue} onCheckedChange={setSwitchValue} />
-                  <Label htmlFor="example-switch">启用功能 ({switchValue ? '开启' : '关闭'})</Label>
+                  <Label htmlFor="example-switch">
+                    {t('examples.enable_feature')} ({switchValue ? t('examples.on') : t('examples.off')})
+                  </Label>
                 </div>
               </CardContent>
             </Card>
@@ -169,31 +175,31 @@ export const Examples = () => {
           <TabsContent value="feedback" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Toast 通知</CardTitle>
-                <CardDescription>消息提示组件</CardDescription>
+                <CardTitle>{t('examples.toast')}</CardTitle>
+                <CardDescription>{t('examples.toast_desc')}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-4">
                 <Button
                   onClick={() =>
                     toast({
-                      title: '操作成功',
-                      description: '您的更改已保存',
+                      title: t('examples.success_title'),
+                      description: t('examples.success_desc'),
                     })
                   }
                 >
-                  默认通知
+                  {t('examples.default_toast')}
                 </Button>
                 <Button
                   variant="destructive"
                   onClick={() =>
                     toast({
-                      title: '操作失败',
-                      description: '请检查您的输入',
+                      title: t('examples.error_title'),
+                      description: t('examples.error_desc'),
                       variant: 'destructive',
                     })
                   }
                 >
-                  错误通知
+                  {t('examples.error_toast')}
                 </Button>
               </CardContent>
             </Card>
@@ -203,21 +209,21 @@ export const Examples = () => {
           <TabsContent value="data" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>TanStack Query 示例</CardTitle>
-                <CardDescription>使用 TanStack Query 进行数据获取</CardDescription>
+                <CardTitle>{t('examples.tanstack_query')}</CardTitle>
+                <CardDescription>{t('examples.tanstack_query_desc')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
                   <code>{`import { useApiQuery } from '@/hooks/useApi';
 
-// 获取用户列表
+// Fetch user list
 const { data, isLoading, error } = useApiQuery(
   ['users'],
   '/api/users'
 );
 
-if (isLoading) return <div>加载中...</div>;
-if (error) return <div>出错了</div>;
+if (isLoading) return <div>Loading...</div>;
+if (error) return <div>Error</div>;
 
 return (
   <ul>
@@ -232,8 +238,8 @@ return (
 
             <Card>
               <CardHeader>
-                <CardTitle>Mutation 示例</CardTitle>
-                <CardDescription>使用 TanStack Query 进行数据变更</CardDescription>
+                <CardTitle>{t('examples.mutation_example')}</CardTitle>
+                <CardDescription>{t('examples.mutation_example_desc')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
@@ -244,12 +250,12 @@ const queryClient = useQueryClient();
 
 const mutation = useApiMutation('/api/users', 'post', {
   onSuccess: () => {
-    // 成功后刷新用户列表
+    // Refresh user list after success
     queryClient.invalidateQueries(['users']);
   },
 });
 
-// 触发 mutation
+// Trigger mutation
 mutation.mutate({ name: 'New User' });`}</code>
                 </pre>
               </CardContent>

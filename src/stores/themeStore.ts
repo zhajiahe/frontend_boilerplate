@@ -31,7 +31,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
   initTheme: () => {
     const savedTheme = storage.getTheme();
-    const theme = savedTheme || 'light';
-    get().setTheme(theme);
+    // storage.getTheme() 返回 'light' | 'dark' | null，默认使用 'light'
+    get().setTheme(savedTheme ?? 'light');
   },
 }));

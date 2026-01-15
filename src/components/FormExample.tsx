@@ -1,19 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { type RegisterFormData, registerSchema } from '@/lib/validations';
+import { createRegisterSchema, type RegisterFormData } from '@/lib/validations';
 
 /**
  * 表单示例组件
  * 展示 React Hook Form + Zod 的用法
- * 复用 validations.ts 中的 registerSchema
+ * 复用 validations.ts 中的 createRegisterSchema
  */
 export const FormExample = () => {
   const { toast } = useToast();
+  const { t } = useTranslation();
+
+  // 使用 i18n 创建 schema
+  const registerSchema = useMemo(() => createRegisterSchema(t), [t]);
 
   const {
     register,
@@ -34,10 +40,10 @@ export const FormExample = () => {
     // 模拟 API 请求
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    console.log('表单数据:', data);
+    console.log('Form data:', data);
     toast({
-      title: '提交成功',
-      description: `欢迎, ${data.username}!`,
+      title: t('auth.register_success'),
+      description: t('auth.login_success_desc', { username: data.username }),
     });
 
     reset();
@@ -46,17 +52,17 @@ export const FormExample = () => {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>注册表单示例</CardTitle>
-        <CardDescription>使用 React Hook Form + Zod 进行表单验证</CardDescription>
+        <CardTitle>{t('examples.form_example')}</CardTitle>
+        <CardDescription>{t('examples.form_example_desc')}</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* 用户名 */}
           <div className="space-y-2">
-            <Label htmlFor="username">用户名</Label>
+            <Label htmlFor="username">{t('auth.username')}</Label>
             <Input
               id="username"
-              placeholder="请输入用户名"
+              placeholder={t('auth.enter_username')}
               {...register('username')}
               aria-invalid={!!errors.username}
             />
@@ -65,11 +71,11 @@ export const FormExample = () => {
 
           {/* 邮箱 */}
           <div className="space-y-2">
-            <Label htmlFor="email">邮箱</Label>
+            <Label htmlFor="email">{t('auth.email')}</Label>
             <Input
               id="email"
               type="email"
-              placeholder="请输入邮箱"
+              placeholder={t('auth.enter_email')}
               {...register('email')}
               aria-invalid={!!errors.email}
             />
@@ -78,11 +84,11 @@ export const FormExample = () => {
 
           {/* 密码 */}
           <div className="space-y-2">
-            <Label htmlFor="password">密码</Label>
+            <Label htmlFor="password">{t('auth.password')}</Label>
             <Input
               id="password"
               type="password"
-              placeholder="请输入密码"
+              placeholder={t('auth.enter_password')}
               {...register('password')}
               aria-invalid={!!errors.password}
             />
@@ -91,11 +97,11 @@ export const FormExample = () => {
 
           {/* 确认密码 */}
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">确认密码</Label>
+            <Label htmlFor="confirmPassword">{t('auth.confirm_password')}</Label>
             <Input
               id="confirmPassword"
               type="password"
-              placeholder="请再次输入密码"
+              placeholder={t('auth.enter_password_again')}
               {...register('confirmPassword')}
               aria-invalid={!!errors.confirmPassword}
             />
@@ -103,7 +109,7 @@ export const FormExample = () => {
           </div>
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? '提交中...' : '注册'}
+            {isSubmitting ? t('auth.registering') : t('auth.register')}
           </Button>
         </form>
       </CardContent>

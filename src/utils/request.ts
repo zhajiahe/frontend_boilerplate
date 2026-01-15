@@ -63,7 +63,7 @@ request.interceptors.response.use(
   (response) => {
     // 检查 BaseResponse 格式的错误（如果后端使用统一响应格式）
     if (response.data && response.data.success === false) {
-      const error = new Error(response.data.msg || '请求失败') as Error & {
+      const error = new Error(response.data.msg || 'Request failed') as Error & {
         response?: { data: unknown; status: number };
       };
       error.response = {
@@ -74,20 +74,22 @@ request.interceptors.response.use(
     }
     return response;
   },
-  async (error: AxiosError<{ msg?: string }>) => {
-    // 处理 401/403 认证错误
-    if (error.response?.status === 401 || error.response?.status === 403) {
-      const errorMsg = error.response?.data?.msg || '';
-      const isAuthError =
-        errorMsg.includes('token') ||
-        errorMsg.includes('认证') ||
-        errorMsg.includes('授权') ||
-        errorMsg.includes('登录') ||
-        error.response?.status === 401;
+  async (error: AxiosError<{ msg?: string; code?: string }>) => {
+    const status = error.response?.status;
 
-      if (isAuthError) {
-        // 直接清除认证并重定向，不再尝试刷新 token
-        // 如需实现 refresh token，请在此处添加逻辑
+    // 处理 401 未授权 - 直接清除认证
+    if (status === 401) {
+      clearAuthAndRedirect();
+      return Promise.reject(error);
+    }
+
+    // 处理 403 禁止访问 - 可能是权限不足，不一定需要重新登录
+    // 仅当响应明确表示 token 无效时才清除认证
+    if (status === 403) {
+      const errorCode = error.response?.data?.code || '';
+      // 使用错误码判断，避免依赖语言特定的错误消息
+      const tokenInvalidCodes = ['TOKEN_EXPIRED', 'TOKEN_INVALID', 'UNAUTHORIZED'];
+      if (tokenInvalidCodes.includes(errorCode)) {
         clearAuthAndRedirect();
         return Promise.reject(error);
       }

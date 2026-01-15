@@ -89,7 +89,9 @@
     "tanstack_query": "TanStack Query Example",
     "tanstack_query_desc": "Data fetching with TanStack Query",
     "mutation_example": "Mutation Example",
-    "mutation_example_desc": "Data mutation with TanStack Query"
+    "mutation_example_desc": "Data mutation with TanStack Query",
+    "form_example": "Registration Form Example",
+    "form_example_desc": "Form validation with React Hook Form + Zod"
   },
   "about": {
     "title": "React Frontend Template",

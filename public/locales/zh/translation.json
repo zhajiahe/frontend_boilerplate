@@ -89,7 +89,9 @@
     "tanstack_query": "TanStack Query 示例",
     "tanstack_query_desc": "使用 TanStack Query 进行数据获取",
     "mutation_example": "Mutation 示例",
-    "mutation_example_desc": "使用 TanStack Query 进行数据变更"
+    "mutation_example_desc": "使用 TanStack Query 进行数据变更",
+    "form_example": "注册表单示例",
+    "form_example_desc": "使用 React Hook Form + Zod 进行表单验证"
   },
   "about": {
     "title": "React 前端模板",
